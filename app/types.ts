@@ -1,0 +1,8 @@
+export type Choice = { id: string; text: string };
+export type Domain = { code: string; module: "math" | "study"; label: string; description: string };
+export type MathQuestion = { id: string; domain: string; subskill: string; prompt: string; format: "option" | "order" | "numeric" | "angle_triangle" | "true_justify" | "rectangle"; difficulty: string; maxPoints: number; options?: Choice[]; tokens?: string[]; placeholder?: string };
+export type StudyItem = { id: string; domain: string; statement: string };
+export type Scenario = { id: string; domain: string; construct: string; situation: string; options: Choice[] };
+export type DiagnosticDefinition = { slug: string; version: number; language: string; title: string; estimated_minutes: number; content: { intro: { eyebrow: string; title: string; description: string; notice: string }; domains: Domain[]; confidenceScale: Array<{ value: number; label: string }>; mathQuestions: MathQuestion[]; studyScale: Array<{ value: number; label: string }>; studyItems: StudyItem[]; scenarios: Scenario[]; planning: { title: string; prompt: string; days: string[] } } };
+export type DomainScore = { domainCode: string; module: "math" | "study"; label: string; score: number; band: string; evidenceCount: number };
+export type DiagnosticResult = { profileTitle: string; mathScores: DomainScore[]; studyScores: DomainScore[]; scenarioScore: number; calibration: { gap: number; direction: number; label: string }; strengths: Array<{ domainCode: string; label: string; score: number; band: string }>; priorities: Array<{ domainCode: string; label: string; score: number; title: string; action: string; duration: string }>; planningStatus: string; notice: string };
