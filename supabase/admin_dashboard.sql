@@ -162,7 +162,9 @@ begin
   ) into output
   from private.diagnostic_attempts a
   left join private.diagnostic_attempt_reviews r on r.attempt_id = a.id
-  where a.id = attempt_id;
+  -- The joined review table also has an `attempt_id` column, so qualify the
+  -- PostgREST RPC argument explicitly to avoid a PL/pgSQL name collision.
+  where a.id = admin_get_diagnostic_attempt.attempt_id;
   if output is null then raise exception 'Passation introuvable' using errcode = 'P0002'; end if;
   return output;
 end;
@@ -181,18 +183,25 @@ begin
   if not public.is_diagnostic_admin() then
     raise exception 'Accès administrateur requis' using errcode = '42501';
   end if;
-  if review_status not in ('new', 'in_review', 'reviewed') then
+  if admin_update_diagnostic_review.review_status not in ('new', 'in_review', 'reviewed') then
     raise exception 'Statut de suivi invalide' using errcode = '22023';
   end if;
-  if char_length(coalesce(review_notes, '')) > 5000 then
+  if char_length(coalesce(admin_update_diagnostic_review.review_notes, '')) > 5000 then
     raise exception 'Notes trop longues' using errcode = '22023';
   end if;
-  if not exists (select 1 from private.diagnostic_attempts a where a.id = attempt_id) then
+  if not exists (select 1 from private.diagnostic_attempts a where a.id = admin_update_diagnostic_review.attempt_id) then
     raise exception 'Passation introuvable' using errcode = 'P0002';
   end if;
 
   insert into private.diagnostic_attempt_reviews (attempt_id, status, notes, reviewed_by, reviewed_at, updated_at)
-  values (attempt_id, review_status, coalesce(review_notes, ''), auth.uid(), case when review_status = 'reviewed' then now() else null end, now())
+  values (
+    admin_update_diagnostic_review.attempt_id,
+    admin_update_diagnostic_review.review_status,
+    coalesce(admin_update_diagnostic_review.review_notes, ''),
+    auth.uid(),
+    case when admin_update_diagnostic_review.review_status = 'reviewed' then now() else null end,
+    now()
+  )
   on conflict (attempt_id) do update set
     status = excluded.status,
     notes = excluded.notes,
@@ -201,7 +210,8 @@ begin
     updated_at = now();
 
   select jsonb_build_object('attemptId', r.attempt_id, 'status', r.status, 'notes', r.notes, 'reviewedAt', r.reviewed_at, 'updatedAt', r.updated_at)
-  into output from private.diagnostic_attempt_reviews r where r.attempt_id = attempt_id;
+  into output from private.diagnostic_attempt_reviews r
+  where r.attempt_id = admin_update_diagnostic_review.attempt_id;
   return output;
 end;
 $$;

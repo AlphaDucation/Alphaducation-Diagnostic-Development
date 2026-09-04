@@ -16,7 +16,17 @@ export async function GET(_request: Request, context: Context) {
   const id = idSchema.safeParse((await context.params).id);
   if (!id.success) return NextResponse.json({ error: "Passation invalide." }, { status: 400 });
   const response = await adminRpc(token, "admin_get_diagnostic_attempt", { attempt_id: id.data });
-  if (!response.ok) return NextResponse.json({ error: "Passation introuvable." }, { status: response.status === 401 || response.status === 403 ? 401 : 404 });
+  if (!response.ok) {
+    const detail = (await response.text()).slice(0, 500);
+    console.error(`admin_get_diagnostic_attempt failed (${response.status})`, detail);
+    if (response.status === 401 || response.status === 403) {
+      return NextResponse.json({ error: "Session expirée." }, { status: 401 });
+    }
+    if (response.status === 404) {
+      return NextResponse.json({ error: "Passation introuvable." }, { status: 404 });
+    }
+    return NextResponse.json({ error: "Impossible de charger ce dossier." }, { status: 502 });
+  }
   return NextResponse.json(await response.json(), { headers: { "Cache-Control": "private, no-store" } });
 }
 
@@ -33,6 +43,13 @@ export async function PUT(request: Request, context: Context) {
     review_status: parsed.data.status,
     review_notes: parsed.data.notes,
   });
-  if (!response.ok) return NextResponse.json({ error: "Impossible d’enregistrer le suivi." }, { status: response.status === 401 || response.status === 403 ? 401 : 502 });
+  if (!response.ok) {
+    const detail = (await response.text()).slice(0, 500);
+    console.error(`admin_update_diagnostic_review failed (${response.status})`, detail);
+    return NextResponse.json(
+      { error: response.status === 401 || response.status === 403 ? "Session expirée." : "Impossible d’enregistrer le suivi." },
+      { status: response.status === 401 || response.status === 403 ? 401 : 502 },
+    );
+  }
   return NextResponse.json(await response.json(), { headers: { "Cache-Control": "private, no-store" } });
 }
