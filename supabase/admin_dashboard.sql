@@ -202,7 +202,7 @@ begin
     case when admin_update_diagnostic_review.review_status = 'reviewed' then now() else null end,
     now()
   )
-  on conflict (attempt_id) do update set
+  on conflict on constraint diagnostic_attempt_reviews_pkey do update set
     status = excluded.status,
     notes = excluded.notes,
     reviewed_by = excluded.reviewed_by,
