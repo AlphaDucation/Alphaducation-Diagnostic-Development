@@ -2,6 +2,13 @@ import type { DiagnosticResult } from "@/app/types";
 
 export type ReviewStatus = "new" | "in_review" | "reviewed";
 
+export type StudyPlanDay = {
+  day: number;
+  focus: string;
+  action: string;
+  duration: string;
+};
+
 export type AttemptListItem = {
   id: string;
   studentFirstName: string;
@@ -46,5 +53,12 @@ export type AttemptDetail = {
     planning?: Array<{ day: string; text: string }>;
   };
   result: DiagnosticResult;
-  review: { status: ReviewStatus; notes: string; reviewedAt: string | null; updatedAt: string | null };
+  review: {
+    status: ReviewStatus;
+    notes: string;
+    professionalSummary: string;
+    studyPlan: StudyPlanDay[];
+    reviewedAt: string | null;
+    updatedAt: string | null;
+  };
 };
