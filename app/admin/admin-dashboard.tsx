@@ -1,4 +1,6 @@
 "use client";
+/* The local logo is pre-sized and compressed for the Worker runtime. */
+/* eslint-disable @next/next/no-img-element */
 
 import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { BarChart3, BookOpenCheck, CheckCircle2, ChevronRight, Clock3, Eye, FileText, GraduationCap, LoaderCircle, LockKeyhole, LogOut, Mail, RefreshCw, Search, ShieldCheck, Sparkles, UserRound, UsersRound } from "lucide-react";
@@ -15,6 +17,10 @@ import type { AttemptDetail, AttemptListItem, AttemptListResponse, ReviewStatus 
 import type { DomainScore } from "@/app/types";
 
 const statusLabels: Record<ReviewStatus, string> = { new: "Nouveau", in_review: "En cours", reviewed: "Relu" };
+
+function AdminBrandLockup({ inverse = false, subtitle }: { inverse?: boolean; subtitle: string }) {
+  return <div className={`brand-lockup ${inverse ? "admin-login-brand" : ""}`}><span className="brand-symbol"><img src="/brand/alphaducation-mark.png" alt="" /></span><span className="brand-words"><strong>alphaducation</strong><small>{subtitle}</small></span></div>;
+}
 
 function formatDate(value: string) {
   return new Intl.DateTimeFormat("fr-LB", { dateStyle: "medium", timeStyle: "short", timeZone: "Asia/Beirut" }).format(new Date(value));
@@ -52,7 +58,7 @@ function LoginPanel({ onAuthenticated }: { onAuthenticated: (email: string) => v
   }
 
   return <main className="admin-login-shell">
-    <div className="admin-login-brand"><div className="brand-mark">α</div><div><p className="brand-name">alphaducation</p><p className="brand-subtitle">Espace pédagogique</p></div></div>
+    <AdminBrandLockup inverse subtitle="Espace pédagogique" />
     <Card className="admin-login-card"><CardContent>
       <div className="admin-login-icon"><LockKeyhole /></div>
       <p className="section-kicker">Accès privé</p>
@@ -146,7 +152,7 @@ export default function AdminDashboard() {
   if (!email) return <LoginPanel onAuthenticated={setEmail} />;
 
   return <main className="admin-shell min-h-screen">
-    <header className="admin-topbar"><div className="admin-topbar-inner"><div className="brand-lockup"><div className="brand-mark">α</div><div><p className="brand-name">alphaducation</p><p className="brand-subtitle">Pilotage pédagogique</p></div></div><div className="flex items-center gap-2"><div className="admin-account"><span>Connecté</span><strong>{email}</strong></div><Button variant="ghost" size="icon" aria-label="Se déconnecter" onClick={logout}><LogOut /></Button></div></div></header>
+    <header className="admin-topbar"><div className="admin-topbar-inner"><AdminBrandLockup subtitle="Pilotage pédagogique" /><div className="flex items-center gap-2"><div className="admin-account"><span>Connecté</span><strong>{email}</strong></div><Button variant="ghost" size="icon" aria-label="Se déconnecter" onClick={logout}><LogOut /></Button></div></div></header>
     <div className="admin-layout">
       <section className="admin-heading"><div><p className="section-kicker">AlphaDiagnostic · EB7</p><h1>Suivi des élèves</h1><p>Repère les profils prioritaires, relis les résultats et prépare chaque entretien.</p></div><Button variant="outline" onClick={loadAttempts} disabled={loading}><RefreshCw className={loading ? "animate-spin" : ""} /> Actualiser</Button></section>
       <section className="admin-stat-grid">{cards.map(({ label, value, icon: Icon, tone }) => <Card key={label} className="admin-stat-card"><CardContent><div className={`admin-stat-icon tone-${tone}`}><Icon /></div><div><strong>{value}</strong><span>{label}</span></div></CardContent></Card>)}</section>
