@@ -47,6 +47,8 @@ export type AttemptDetail = {
   durationSeconds: number | null;
   completedAt: string;
   responses: {
+    routing?: { mode: string; stream: string; includeProbes?: boolean; topicCoverage?: Array<{ topicId: string; status: string }> };
+    items?: Array<{ itemId: string; optionId?: string; answer?: string; confidence?: number }>;
     math?: Array<{ itemId: string; answer: Record<string, unknown>; confidence: number }>;
     study?: Array<{ itemId: string; value: number }>;
     scenarios?: Array<{ itemId: string; optionId: string }>;

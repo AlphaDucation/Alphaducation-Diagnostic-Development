@@ -145,7 +145,7 @@ export default function ReportEditor({ attemptId }: { attemptId: string }) {
     <article className="report-document">
       <header className="report-cover">
         <div className="report-brand"><img src="/brand/alphaducation-mark.png" alt="" /><div><strong>alphaducation</strong><span>Apprendre · Comprendre · Grandir</span></div></div>
-        <div className="report-edition">AlphaDiagnostic · EB7</div>
+        <div className="report-edition">AlphaDiagnostic · {attempt.student.grade}</div>
         <div className="report-cover-copy"><p>Bilan pédagogique personnalisé</p><h1>{attempt.student.firstName}<br />{attempt.student.lastName}</h1><div className="report-profile">{attempt.result.profileTitle}</div></div>
         <dl className="report-meta"><div><dt>Niveau</dt><dd>{attempt.student.grade}</dd></div><div><dt>Passation</dt><dd>{formatDate(attempt.completedAt)}</dd></div><div><dt>Durée</dt><dd>{formatDuration(attempt.durationSeconds)}</dd></div><div><dt>État</dt><dd>{statusLabels[status]}</dd></div></dl>
       </header>

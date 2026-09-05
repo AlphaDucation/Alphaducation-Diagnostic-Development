@@ -5,12 +5,14 @@ async function runtimeEnv() {
   return env as { SUPABASE_URL?: string; SUPABASE_PUBLISHABLE_KEY?: string };
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   const runtime = await runtimeEnv();
   if (!runtime.SUPABASE_URL || !runtime.SUPABASE_PUBLISHABLE_KEY) return NextResponse.json({ error: "Le diagnostic n’est pas encore configuré." }, { status: 503 });
+  const requestedSlug = new URL(request.url).searchParams.get("slug") ?? "eb7-fr";
+  if (!/^[a-z0-9-]{3,60}$/.test(requestedSlug)) return NextResponse.json({ error: "Diagnostic invalide." }, { status: 400 });
   const endpoint = new URL("/rest/v1/diagnostic_versions", runtime.SUPABASE_URL);
   endpoint.searchParams.set("select", "slug,version,language,title,estimated_minutes,content");
-  endpoint.searchParams.set("slug", "eq.eb7-fr");
+  endpoint.searchParams.set("slug", `eq.${requestedSlug}`);
   endpoint.searchParams.set("status", "eq.published");
   endpoint.searchParams.set("limit", "1");
   const response = await fetch(endpoint, { headers: { apikey: runtime.SUPABASE_PUBLISHABLE_KEY, Authorization: `Bearer ${runtime.SUPABASE_PUBLISHABLE_KEY}` }, cache: "no-store" });

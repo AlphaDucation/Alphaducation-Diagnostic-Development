@@ -1,11 +1,12 @@
 # Supabase
 
-The connected `Alphaducation Diagnostic Development` project contains two applied migrations:
+The connected `Alphaducation Diagnostic Development` project contains the legacy EB7 diagnostic and the multi-level runtime:
 
 - `initial_alphadiagnostic`: published French EB7 content, private scoring keys, private attempts, RLS, and the validated `submit_diagnostic` RPC.
 - `harden_private_tables`: explicit no-direct-access policies, a supporting foreign-key index, and anonymous-only RPC execution.
+- `add_multilevel_diagnostic_runtime`: a validated, insert-only `submit_diagnostic_v2` RPC for G6 through Terminale, including stream routing, taught-topic checks, skill/process scoring, confidence calibration, misconceptions, interventions, and non-assessed topic reporting.
 
-The browser never receives database credentials. The two server routes use the Sites runtime variables `SUPABASE_URL` and `SUPABASE_PUBLISHABLE_KEY`.
+The browser never receives scoring keys or privileged database credentials. Server routes use the runtime variables `SUPABASE_URL` and `SUPABASE_PUBLISHABLE_KEY`; public question content is exposed only through published rows protected by RLS.
 
 The administrator dashboard schema is documented in `admin_dashboard.sql`. It adds:
 

@@ -1,8 +1,8 @@
 # AlphaDiagnostic
 
-Plateforme de diagnostic pédagogique d'AlphaDucation, conçue d'abord pour les élèves francophones. La première version évalue deux dimensions :
+Plateforme de diagnostic pédagogique d'AlphaDucation pour les élèves francophones de la Grade 6 à la Terminale suivant le curriculum libanais. Elle évalue deux dimensions :
 
-- les acquis mathématiques d'un élève entrant en EB7 ;
+- les acquis et prérequis mathématiques propres au niveau et à la branche de l'élève ;
 - ses méthodes de travail, sa planification, sa confiance et sa réaction face aux évaluations.
 
 À la fin du parcours, l'élève reçoit un bilan synthétique et des priorités de travail. Les réponses et les coordonnées parentales sont conservées dans des tables Supabase privées.
@@ -10,9 +10,12 @@ Plateforme de diagnostic pédagogique d'AlphaDucation, conçue d'abord pour les 
 ## Fonctionnalités
 
 - parcours étudiant responsive et accessible, entièrement en français ;
-- 12 questions de mathématiques avec niveau de confiance ;
-- 24 affirmations sur les méthodes d'apprentissage ;
-- 6 mises en situation et un exercice de planification sur trois jours ;
+- 10 banques indépendantes : G6, G7, G8, G9, S1, S2 et Terminale SG/SV/SE/LH ;
+- quatre parcours : début d'année, milieu d'année, fin d'année et positionnement approfondi ;
+- déclaration des chapitres étudiés et exclusion explicite des chapitres non enseignés ;
+- questions diagnostiques, raisonnement, analyse d'erreur, transfert et confiance ;
+- profil de métacognition, autorégulation, stratégies, examen, affect mathématique et usage de l'IA ;
+- exercice de planification sur trois jours ;
 - calcul sécurisé du profil et stockage des tentatives dans Supabase ;
 - validation des données côté serveur avec Zod ;
 - aucune clé Supabase ni règle de notation exposée dans le navigateur.
@@ -52,7 +55,7 @@ Le projet est prêt à être déployé depuis ce dépôt sur un hébergeur compa
 - `SUPABASE_URL` ;
 - `SUPABASE_PUBLISHABLE_KEY`.
 
-Ne jamais enregistrer ces valeurs directement dans GitHub. Le projet Supabase doit déjà contenir les migrations et la fonction `submit_diagnostic` décrites dans [supabase/README.md](supabase/README.md).
+Ne jamais enregistrer ces valeurs directement dans GitHub. Le projet Supabase doit déjà contenir les migrations et les fonctions `submit_diagnostic` et `submit_diagnostic_v2` décrites dans [supabase/README.md](supabase/README.md).
 
 ## Protection des données
 

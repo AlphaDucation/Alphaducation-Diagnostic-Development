@@ -3,7 +3,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "AlphaDiagnostic | Alphaducation",
-  description: "Diagnostic pédagogique français pour comprendre les acquis en mathématiques et les méthodes d’apprentissage avant l’entrée en EB7.",
+  description: "Diagnostic pédagogique français de la Grade 6 à la Terminale pour comprendre les acquis en mathématiques et les méthodes d’apprentissage.",
   other: { "codex-preview": "development" },
   icons: { icon: "/brand/alphaducation-mark.png", shortcut: "/brand/alphaducation-mark.png", apple: "/brand/alphaducation-mark.png" },
 };
